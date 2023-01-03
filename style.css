@@ -1,0 +1,40 @@
+body{
+    background:rgb(232, 217, 158);
+    background-image: url("background_m.png");
+    background-size: cover;
+
+}
+
+.outer {
+    display: flex;
+   
+}
+
+/* screenshot*/
+
+#screenshot{
+    margin:40px;
+  }
+   
+  #img{
+    width:800px;
+    border:2px solid #ff0000;
+  }
+  #target{
+    width:400px;
+    border:2px solid #000;
+  }
+  #target p{
+    margin:4px;
+    border-bottom:1px solid rgba(0,0,0,.2);
+  }
+
+/* div {
+  max-width: 800px;
+  margin: auto;
+}
+img {
+  width: 100%;
+} */
+
+ /*divの幅に対する割合 */

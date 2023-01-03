@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only bootstrapのリンク-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container w-75 outer">
+        <!-- <h1 class="text-center my-4"></h1> -->
+        <form id="form" class="text-center my-4">
+            <input type="text" id="input" 
+            class="form-control" placeholder="to doを入力" autocomplete="off">
+        </form>
+        <ul class="list-gorup text-secondary" id="ul">
+
+        </ul>
+    </div> 
+
+    <!-- <h1 class="text-center my-4"></h1> -->
+    <div class="outer">
+    <canvas id = "myCanvas" width="1200px" height="500px"></canvas>
+    </div>
+    
+    <script>
+        console.log ('Hello')
+        // formがSubmitされたときに値を取ってくる
+        const form  = document.getElementById("form");
+        const input = document.getElementById("input");
+        const ul    = document.getElementById("ul");
+        const todos = JSON.parse(localStorage.getItem("todos"));
+
+        if (todos){
+            todos.forEach(todo => {
+                add(todo);
+            })
+        }
+        form.addEventListener("submit", function(event){
+            event.preventDefault();
+            console.log(input.value);
+            add();
+        });
+
+        function add(todo){
+            let todoText = input.value;
+
+            if (todo){
+                todoText = todo;
+            }
+
+            if(todoText.length > 0){
+            const li = document.createElement("li");
+            li.innerText = todoText;
+            li.classList.add("list-group-item");
+            li.addEventListener("contextmenu", function(event){
+                event.preventDefault();
+                li.remove();
+                saveData();
+            });
+
+            li.addEventListener("click", function(){
+                li.classList.toggle("text-decoration-line-through");
+            })
+
+            ul.appendChild(li);
+            input.value = "";
+            saveData();
+            }
+        }
+
+        // お絵描きアプリ
+
+        function saveData(){
+            const lists = document.querySelectorAll("li");
+            let todos = [];
+            lists.forEach(list => {
+                todos.push(list.innerText);
+            });
+            localStorage.setItem("todos", JSON.stringify(todos));
+
+        }
+
+        const canvas = document.getElementById("myCanvas");
+        const context = canvas.getContext("2d");
+
+        context.rect(100, 5,canvas.width, canvas.height);
+        context.fillStyle = "#CC99CC";
+        context.fill();
+        context.beginPath();
+        context.moveTo(-100, 100);
+        context.lineTo(0, 200);
+        context.lineWidth = 5;
+        context.strokeStyle = "#fff";
+        context.stroke();
+
+        let mouse = {x: 0, y: 0};
+
+        canvas.addEventListener("mousemove", function(e){
+            mouse.x = e.pageX - this.offsetLeft;
+            mouse.y = e.pageY - this.offsetTop;
+            // console.log(mouse);
+        }, false);
+
+        canvas.addEventListener("mousedown", function(e){
+            context.beginPath();
+            context.moveTo(mouse.x, mouse.y);
+
+            canvas.addEventListener("mousemove", onPaint, false);
+            // console.log(mouse);
+        }, false);
+
+        const onPaint = function (e){
+            context.lineTo(mouse.x, mouse.y);
+            context.stroke();
+        };
+
+        canvas.addEventListener("mouseup", function(){
+            canvas.removeEventListener("mousemove", onPaint, false);
+        }, false);
+
+        // スマホでかける
+
+        canvas.addEventListener("touchstart", () => {
+  context.beginPath();
+  isDrag = true;
+});
+      
+//         // screenshot
+//         window.onload = function(){
+//   html2canvas(document.getElementById("target"),{
+//     onrendered: function(canvas){
+//       var data = canvas.toDataURL("image/png");
+//       document.getElementById("ss").href = data;
+//       document.getElementById("img").src = data;
+//     }
+//   });
+// }
+
+    </script>
+</body>
+</html>
